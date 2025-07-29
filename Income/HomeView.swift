@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct HomeView: View {
     
     @State private var transactions: [Transaction] = [
         
@@ -25,7 +25,7 @@ struct ContentView: View {
                             
                             Spacer()
                             
-                            Text("13/11/24")
+                            Text(transaction.displayDate)
                                 .font(.system(size: 14))
                             
                             Spacer()
@@ -50,7 +50,7 @@ struct ContentView: View {
                                     Text(transaction.title)
                                         .font(.system(size: 15, weight: .bold))
                                     Spacer()
-                                    Text(String(transaction.amount))
+                                    Text(String(transaction.displayAmout))
                                         .font(.system(size: 15, weight: .bold))
                                 }
                                 Text("Completed")
@@ -67,5 +67,5 @@ struct ContentView: View {
     
     
 #Preview {
-    ContentView()
+    HomeView()
 }
