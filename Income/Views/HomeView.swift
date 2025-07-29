@@ -12,8 +12,27 @@ struct HomeView: View {
     @State private var transactions: [Transaction] = [
         
         Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date()),
+        Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date()),
         Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date())
     ]
+    
+    fileprivate func FloatingButton() -> some View {
+        VStack {
+            Spacer()
+            NavigationLink {
+                AddTransactionView()
+            } label: {
+                Text("+")
+                    .font(.largeTitle)
+                    .frame(width: 70, height: 70)
+                    .foregroundStyle(Color.white)
+                    .padding(.bottom, 7)
+            }
+            .background(Color.primaryLightGreen)
+            .clipShape(Circle())
+        }
+    }
+    
     
     
     fileprivate func BalanceView() -> some View {
@@ -79,17 +98,23 @@ struct HomeView: View {
     
     
     var body: some View {
-        VStack {
-            BalanceView()
-            
-            List {
-                ForEach(transactions) { transaction in
+        NavigationStack {
+            ZStack {
+                VStack {
+                    BalanceView()
                     
-               TransactionView(transaction: transaction)
+                    List {
+                        ForEach(transactions) { transaction in
+                            
+                            TransactionView(transaction: transaction)
+                        }
                     }
+                    .scrollContentBackground(.hidden)
                 }
-            .scrollContentBackground(.hidden)
+                
+                FloatingButton()
             }
+        }
         }
     }
     
