@@ -21,10 +21,17 @@ struct AddTransactionView: View {
     
     var body: some View {
         VStack {
+            
             TextField("0.00", value: $amount, formatter: numberFormatter)
                 .font(.system(size: 60, weight: .thin))
                 .multilineTextAlignment(.center)
                 .keyboardType(.numberPad)
+            
+            Rectangle()
+                .fill(Color(uiColor: UIColor.lightGray))
+                .frame(height: 0.5)
+                .padding(.horizontal, 30)
+            
             
             Picker("Choose Type", selection: $selectedTransactionType) {
                 ForEach(TransactionType.allCases) { transactionType in
@@ -39,8 +46,23 @@ struct AddTransactionView: View {
                 .padding(.horizontal, 30)
                 .padding(.top)
             
+            Button(action: {
+                
+            }, label: {
+                Text("Create")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Color.white)
+                    .frame(height: 40)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.primaryLightGreen)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+            })
+            .padding(.top)
+            .padding(.horizontal, 30)
+            
             Spacer()
         }
+        .padding(.top)
     }
 }
 
