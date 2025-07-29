@@ -10,6 +10,7 @@ import SwiftUI
 struct AddTransactionView: View {
     
     @State private var amount = 0.0
+    @State private var selectedTransactionType: TransactionType = .expense
     
     var numberFormatter: NumberFormatter {
         let numberFormatter = NumberFormatter()
@@ -23,6 +24,13 @@ struct AddTransactionView: View {
                 .font(.system(size: 60, weight: .thin))
                 .multilineTextAlignment(.center)
                 .keyboardType(.numberPad)
+            
+            Picker("Choose Type", selection: $selectedTransactionType) {
+                ForEach(TransactionType.allCases) { transactionType in
+                    Text(transactionType.title)
+                        .tag(transactionType)
+                }
+            }
             
             Spacer()
         }
