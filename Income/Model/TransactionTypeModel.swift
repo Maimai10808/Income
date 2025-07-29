@@ -7,6 +7,8 @@
 
 import Foundation
 
+
+
 enum TransactionType: String, CaseIterable, Identifiable {
     case income
     
