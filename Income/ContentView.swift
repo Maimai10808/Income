@@ -8,17 +8,27 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var transactions: [Transaction] = [
+        
+        Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date())
+    ]
+    
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            List {
+                ForEach(transactions) { transaction in
+                    HStack {
+                        
+                        }
+                    }
+                }
+            }
         }
-        .padding()
     }
-}
-
+    
+    
 #Preview {
     ContentView()
 }
