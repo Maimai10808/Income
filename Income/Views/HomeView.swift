@@ -114,7 +114,18 @@ struct HomeView: View {
                 
                 FloatingButton()
             }
-        }
+            .navigationTitle("Income")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        
+                    }, label: {
+                        Image(systemName: "gearshape.fill")
+                            .foregroundStyle(Color.black)
+                    })
+                }
+            }
+            }
         }
     }
     
