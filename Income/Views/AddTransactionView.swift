@@ -18,6 +18,7 @@ struct AddTransactionView: View {
     @State private var showaAlert   = false
     
     @Binding var transactions: [Transaction]
+    var transactionToEdit: Transaction?
     
     @Environment(\.dismiss) var dismiss
     
@@ -64,12 +65,29 @@ struct AddTransactionView: View {
                 
                 let transaction = Transaction(title: transactionTitle, type: selectedTransactionType, amount: amount, date: Date())
                 
-                transactions.append(transaction)
+                // 获取transactionToEdit在transactions中的位置，以便更新或替换。
+//                let index = transactions.firstIndex { transaction in
+//                    self.transactionToEdit?.id == transaction.id
+//                }
+                
+                if let transactionToEdit = transactionToEdit {
+                    guard let indexOfTransaction = transactions.firstIndex(of: transactionToEdit) else {
+                        alertTitle   = "Something went wrong"
+                        alertMessage = "Can't update this transaction right now."
+                        showaAlert   = true
+                        return
+                    }
+                    
+                    transactions[indexOfTransaction] = transaction
+                    
+                } else {
+                    transactions.append(transaction)
+                }
                 
                 dismiss()
                 
             }, label: {
-                Text("Create")
+                Text(transactionToEdit == nil ? "Create" : "Update")
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(Color.white)
                     .frame(height: 40)
@@ -82,6 +100,14 @@ struct AddTransactionView: View {
             
             Spacer()
         }
+        .onAppear(perform: {
+            if let transactionToEdit = transactionToEdit {
+                selectedTransactionType = transactionToEdit.type
+                transactionTitle        = transactionToEdit.title
+                amount                  = transactionToEdit.amount
+            }
+            
+        })
         .padding(.top)
         .alert(alertTitle, isPresented: $showaAlert) {
             Button {
