@@ -21,6 +21,8 @@ struct HomeView: View {
     
     @State private var transactionToEdit: Transaction?
     
+    @State private var showSettings = false
+    
     private var expenses: String {
         let sumExpesnses = transactions
             .filter({ $0.type == .expense })
@@ -159,20 +161,24 @@ struct HomeView: View {
                         }
                         .onDelete(perform: delete)
                     }
+                    
                     .scrollContentBackground(.hidden)
                 }
+                .navigationTitle("Income")
                 
                 FloatingButton()
             }
-            .navigationTitle("Income")
             .navigationDestination(item: $transactionToEdit, destination: { transactionToEdit in
                 AddTransactionView(transactions: $transactions, transactionToEdit: transactionToEdit)
                 
             })
+            .sheet(isPresented: $showSettings, content: {
+                SettingsView()
+            })
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
-                        
+                        showSettings = true
                     }, label: {
                         Image(systemName: "gearshape.fill")
                             .foregroundStyle(Color.black)
