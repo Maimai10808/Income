@@ -13,12 +13,54 @@ struct HomeView: View {
         
         Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date()),
         Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date()),
-        Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date())
+        Transaction(title: "Apple", type: .income, amount: 5.00, date: Date())
     ]
     
     @State private var showAddTransactionView = false
     
     @State private var transactionToEdit: Transaction?
+    
+    var expenses: String {
+        var sumExpesnses = 0.0
+        for transaction in transactions {
+            if transaction.type == .expense {
+                sumExpesnses += transaction.amount
+            }
+        }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        return numberFormatter.string(from: sumExpesnses as NSNumber) ?? "$0.00"
+    }
+    
+    var incomes: String {
+        var sumIncomes = 0.0
+        for transaction in transactions {
+            if transaction.type == .income {
+                sumIncomes += transaction.amount
+            }
+        }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        return numberFormatter.string(from: sumIncomes as NSNumber) ?? "$0.00"
+    }
+    
+    var total: String {
+        var total = 0.0
+        for transaction in transactions {
+            switch transaction.type {
+            case .income:
+                total += transaction.amount
+            case .expense:
+                total -= transaction.amount
+            }
+        }
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        return numberFormatter.string(from: total as NSNumber) ?? "$0.00"
+    }
     
     fileprivate func FloatingButton() -> some View {
         VStack {
@@ -48,13 +90,13 @@ struct HomeView: View {
                 
                 HStack {
                     
-                    VStack {
+                    VStack(alignment: .leading) {
                         
                         Text("BALANCE")
                             .font(.caption)
                             .foregroundStyle(Color.white)
                         
-                        Text("$2")
+                        Text("\(total)")
                             .font(.system(size: 42, weight: .light))
                             .foregroundStyle(Color.white)
                     }
@@ -71,7 +113,7 @@ struct HomeView: View {
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(Color.white)
                         
-                        Text("$22")
+                        Text("\(expenses)")
                             .font(.system(size: 15, weight: .regular))
                             .foregroundStyle(Color.white)
                         
@@ -82,7 +124,7 @@ struct HomeView: View {
                             .font(.system(size: 15, weight: .semibold))
                             .foregroundStyle(Color.white)
                         
-                        Text("$22")
+                        Text("\(incomes)")
                             .font(.system(size: 15, weight: .regular))
                             .foregroundStyle(Color.white)
                         
@@ -138,8 +180,8 @@ struct HomeView: View {
                         Image(systemName: "gearshape.fill")
                             .foregroundStyle(Color.black)
                     })
+                    }
                 }
-            }
             }
         }
     }
