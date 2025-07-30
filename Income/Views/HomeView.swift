@@ -51,7 +51,7 @@ struct HomeView: View {
             .filter({ $0.type == .income })
             .reduce(0, { $0 + $1.amount })
         
-        var total = sumIncomes - sumExpesnses
+        let total = sumIncomes - sumExpesnses
         
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
@@ -157,6 +157,7 @@ struct HomeView: View {
                             
                            
                         }
+                        .onDelete(perform: delete)
                     }
                     .scrollContentBackground(.hidden)
                 }
@@ -180,6 +181,13 @@ struct HomeView: View {
                 }
             }
         }
+    
+    
+    
+    private func delete(at offsets: IndexSet) {
+        transactions.remove(atOffsets: offsets)
+    }
+    
     }
     
 
