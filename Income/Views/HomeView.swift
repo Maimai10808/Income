@@ -18,6 +18,7 @@ struct HomeView: View {
     ]
     
     @AppStorage("orderDescending") var orderDescending = false
+    @AppStorage("currency") var currency: Currency = .usd
     
     private var displayTransactions: [Transaction] {
         let sortedTransactions = orderDescending ?
@@ -41,6 +42,7 @@ struct HomeView: View {
         
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
+        numberFormatter.locale = currency.locale
         return numberFormatter.string(from: sumExpesnses as NSNumber) ?? "$0.00"
     }
     
@@ -52,6 +54,7 @@ struct HomeView: View {
         
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
+        numberFormatter.locale = currency.locale
         return numberFormatter.string(from: sumIncomes as NSNumber) ?? "$0.00"
     }
     
@@ -68,6 +71,7 @@ struct HomeView: View {
         
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
+        numberFormatter.locale = currency.locale
         return numberFormatter.string(from: total as NSNumber) ?? "$0.00"
     }
     

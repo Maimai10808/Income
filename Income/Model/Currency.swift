@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Currency: CaseIterable {
+enum Currency: Int,CaseIterable {
     
     case usd, pounds
     
@@ -20,4 +20,15 @@ enum Currency: CaseIterable {
             return "Pounds"
         }
     }
+    
+    var locale: Locale {
+        switch self {
+        case .usd:
+            return Locale(identifier: "en_US")
+        case .pounds:
+            return Locale(identifier: "en_GB")
+        }
+    }
+    
+    
 }

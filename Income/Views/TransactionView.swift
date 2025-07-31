@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TransactionView: View {
     let transaction: Transaction
-    
+    @AppStorage("currency") var currency: Currency = .usd
     
     
     var body: some View {
@@ -43,7 +43,7 @@ struct TransactionView: View {
                         Text(transaction.title)
                             .font(.system(size: 15, weight: .bold))
                         Spacer()
-                        Text(String(transaction.displayAmout))
+                        Text(String(transaction.displayAmout(currency: currency)))
                             .font(.system(size: 15, weight: .bold))
                     }
                     Text("Completed")

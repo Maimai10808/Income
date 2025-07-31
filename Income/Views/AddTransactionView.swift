@@ -17,6 +17,8 @@ struct AddTransactionView: View {
     @State private var alertMessage = ""
     @State private var showaAlert   = false
     
+    @AppStorage("currency") var currency: Currency = .usd
+    
     @Binding var transactions: [Transaction]
     var transactionToEdit: Transaction?
     
@@ -25,6 +27,7 @@ struct AddTransactionView: View {
     var numberFormatter: NumberFormatter {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
+        numberFormatter.locale = currency.locale
         return numberFormatter
     }
     
