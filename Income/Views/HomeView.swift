@@ -5,6 +5,17 @@
 //  Created by mac on 7/27/25.
 //
 
+
+/*
+ 1. Persistence Container -> Entity
+ 2. DataManager -> Managed Object Context
+ 3. Create
+ 4. Read -> FetchRequest
+ 5. Update
+ 6. Delete
+ 7. In Memory Persistence Store (PreViews)
+ */
+
 import SwiftUI
 
 struct HomeView: View {
