@@ -7,6 +7,14 @@
 
 
 /*
+ 1. Object Graph Management
+ 2. Persistence Store Coordinator
+ 3. Persistence -> SQLite
+ 
+ */
+
+
+/*
  1. Persistence Container -> Entity
  2. DataManager -> Managed Object Context
  3. Create
