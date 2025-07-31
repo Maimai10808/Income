@@ -11,7 +11,7 @@ struct SettingsView: View {
     
     @AppStorage("orderDescending") var orderDescending = false
     @AppStorage("currency") var currency: Currency = .usd
-    @State private var filterMinimum = 0.0
+    @AppStorage("filterMinimum") var filterMinimum = 0.0
     
     
     
