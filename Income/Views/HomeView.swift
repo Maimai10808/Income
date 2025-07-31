@@ -25,11 +25,11 @@
  */
 
 import SwiftUI
+import CoreData
 
 struct HomeView: View {
     
-    @State private var transactions: [Transaction] = [ ]
-    @State private var transactionToEdit: Transaction?
+    @State private var transactionToEdit: TransactionItem?
     
     @FetchRequest(sortDescriptors: []) var transactionsCoreData: FetchedResults<TransactionItem>
     
@@ -40,18 +40,18 @@ struct HomeView: View {
     @State private var showAddTransactionView = false
     @State private var showSettings           = false
     
-    private var displayTransactions: [Transaction] {
+    private var displayTransactions: [TransactionItem] {
         let sortedTransactions = orderDescending ?
-        transactions.sorted(by: { $0.date < $1.date }) :
-        transactions.sorted(by: { $0.date > $1.date })
+        transactionsCoreData.sorted(by: { $0.wrappedDate < $1.wrappedDate }) :
+        transactionsCoreData.sorted(by: { $0.wrappedDate > $1.wrappedDate })
         let filteredTransactions = sortedTransactions.filter({ $0.amount > filterMinimum })
         return sortedTransactions
     }
     
     
     private var expenses: String {
-        let sumExpesnses = transactions
-            .filter({ $0.type == .expense })
+        let sumExpesnses = transactionsCoreData
+            .filter({ $0.wrappedType == .expense })
             .reduce(0, { $0 + $1.amount })
         
         let numberFormatter = NumberFormatter()
@@ -61,8 +61,8 @@ struct HomeView: View {
     }
     
     private var incomes: String {
-        let sumIncomes = transactions
-            .filter({ $0.type == .income })
+        let sumIncomes = transactionsCoreData
+            .filter({ $0.wrappedType == .income })
             .reduce(0, { $0 + $1.amount })
 
         
@@ -73,12 +73,12 @@ struct HomeView: View {
     }
     
     private var total: String {
-        let sumExpesnses = transactions
-            .filter({ $0.type == .expense })
+        let sumExpesnses = transactionsCoreData
+            .filter({ $0.wrappedType == .expense })
             .reduce(0, { $0 + $1.amount })
         
-        let sumIncomes = transactions
-            .filter({ $0.type == .income })
+        let sumIncomes = transactionsCoreData
+            .filter({ $0.wrappedType == .income })
             .reduce(0, { $0 + $1.amount })
         
         let total = sumIncomes - sumExpesnses
@@ -93,7 +93,7 @@ struct HomeView: View {
         VStack {
             Spacer()
             NavigationLink {
-                AddTransactionView(transactions: $transactions)
+                AddTransactionView()
             } label: {
                 Text("+")
                     .font(.largeTitle)
@@ -198,7 +198,7 @@ struct HomeView: View {
                 FloatingButton()
             }
             .navigationDestination(item: $transactionToEdit, destination: { transactionToEdit in
-                AddTransactionView(transactions: $transactions, transactionToEdit: transactionToEdit)
+                AddTransactionView(transactionToEdit: transactionToEdit)
                 
             })
             .sheet(isPresented: $showSettings, content: {
@@ -220,7 +220,18 @@ struct HomeView: View {
     
     
     private func delete(at offsets: IndexSet) {
-        transactions.remove(atOffsets: offsets)
+        let context = DataManager.shared.container.viewContext
+        
+        for index in offsets {
+            let transaction = displayTransactions[index]
+            context.delete(transaction)
+        }
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error deleting transaction: \(error)")
+        }
     }
     
     }

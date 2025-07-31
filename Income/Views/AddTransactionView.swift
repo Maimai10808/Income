@@ -14,8 +14,7 @@ struct AddTransactionView: View {
     @State private var transactionTitle = ""
     @State private var selectedTransactionType: TransactionType = .expense
     
-    @Binding var transactions: [Transaction]
-    var transactionToEdit: Transaction?
+    var transactionToEdit: TransactionItem?
     
     @AppStorage("currency") var currency: Currency = .usd
     
@@ -76,18 +75,19 @@ struct AddTransactionView: View {
 //                }
                 
                 if let transactionToEdit = transactionToEdit {
-                    guard let indexOfTransaction = transactions.firstIndex(of: transactionToEdit) else {
+                    // 更新现有的交易
+                    transactionToEdit.title = transactionTitle
+                    transactionToEdit.type = Int16(selectedTransactionType.rawValue)
+                    transactionToEdit.amount = amount
+                    
+                    do {
+                        try viewContext.save()
+                    } catch {
                         alertTitle   = "Something went wrong"
                         alertMessage = "Can't update this transaction right now."
                         showaAlert   = true
                         return
                     }
-                    let transaction = Transaction(title : transactionTitle,
-                                                  type  : selectedTransactionType,
-                                                  amount: amount,
-                                                  date  : transactionToEdit.date)
-                    
-                    transactions[indexOfTransaction] = transaction
                     
                 } else {
                     
@@ -130,9 +130,9 @@ struct AddTransactionView: View {
         }
         .onAppear(perform: {
             if let transactionToEdit = transactionToEdit {
-                selectedTransactionType = transactionToEdit.type
-                transactionTitle        = transactionToEdit.title
-                amount                  = transactionToEdit.amount
+                selectedTransactionType = transactionToEdit.wrappedType
+                transactionTitle        = transactionToEdit.wrappedTitle
+                amount                  = transactionToEdit.wrappedAmount
             }
             
         })
@@ -151,5 +151,5 @@ struct AddTransactionView: View {
 }
 
 #Preview {
-    AddTransactionView(transactions: .constant([]))
+    AddTransactionView()
 }

@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct TransactionView: View {
-    let transaction: Transaction
+    let transaction: TransactionItem
     @AppStorage("currency") var currency: Currency = .usd
+    
+    private func formatAmount(_ amount: Double, currency: Currency) -> String {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.locale = currency.locale
+        return numberFormatter.string(from: amount as NSNumber) ?? "$0.00"
+    }
     
     
     var body: some View {
@@ -18,7 +25,7 @@ struct TransactionView: View {
                 
                 Spacer()
                 
-                Text(transaction.displayDate)
+                Text(transaction.wrappedDate, style: .date)
                     .font(.system(size: 14))
                 
                 Spacer()
@@ -29,21 +36,21 @@ struct TransactionView: View {
             .clipShape(RoundedRectangle(cornerRadius: 5))
             
             HStack {
-                Image(systemName: transaction.type == .income ?
+                Image(systemName: transaction.wrappedType == .income ?
                       "arrow.up.forward" :
                         "arrow.down.forward")
                 .font(.system(size: 16, weight: .bold))
-                .foregroundStyle(transaction.type == .income ?
+                .foregroundStyle(transaction.wrappedType == .income ?
                                  Color.green :
                                     Color.red)
                 
                 VStack(alignment: .leading, spacing: 5) {
                     
                     HStack {
-                        Text(transaction.title)
+                        Text(transaction.wrappedTitle)
                             .font(.system(size: 15, weight: .bold))
                         Spacer()
-                        Text(String(transaction.displayAmout(currency: currency)))
+                        Text(formatAmount(transaction.wrappedAmount, currency: currency))
                             .font(.system(size: 15, weight: .bold))
                     }
                     Text("Completed")
@@ -56,6 +63,4 @@ struct TransactionView: View {
     }
 }
 
-#Preview {
-    TransactionView(transaction: Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date()))
-}
+
