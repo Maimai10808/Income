@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct AddTransactionView: View {
     
@@ -22,7 +23,8 @@ struct AddTransactionView: View {
     @Binding var transactions: [Transaction]
     var transactionToEdit: Transaction?
     
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.managedObjectContext) private var viewContext
     
     var numberFormatter: NumberFormatter {
         let numberFormatter = NumberFormatter()
@@ -59,6 +61,7 @@ struct AddTransactionView: View {
                 .padding(.top)
             
             Button(action: {
+                
                 guard transactionTitle.count >= 2 else {
                     alertTitle   = "Invaild Title"
                     alertMessage = "Title must be 2 or more characters long."
@@ -66,8 +69,7 @@ struct AddTransactionView: View {
                     return
                 }
                 
-                let transaction = Transaction(title: transactionTitle, type: selectedTransactionType, amount: amount, date: Date())
-                
+               
                 // 获取transactionToEdit在transactions中的位置，以便更新或替换。
 //                let index = transactions.firstIndex { transaction in
 //                    self.transactionToEdit?.id == transaction.id
@@ -80,11 +82,34 @@ struct AddTransactionView: View {
                         showaAlert   = true
                         return
                     }
+                    let transaction = Transaction(title : transactionTitle,
+                                                  type  : selectedTransactionType,
+                                                  amount: amount,
+                                                  date  : transactionToEdit.date)
                     
                     transactions[indexOfTransaction] = transaction
                     
                 } else {
-                    transactions.append(transaction)
+                    
+                    let transaction        = TransactionItem(context: viewContext)
+                    
+                        transaction.id     = UUID()
+                        transaction.title  = transactionTitle
+                        transaction.type   = Int16(selectedTransactionType.rawValue)
+                        transaction.amount = amount
+                        transaction.date   = Date()
+                    
+                    do {
+                        
+                        try viewContext.save()
+                        
+                    } catch {
+                        alertTitle   = "Something went wrong"
+                        alertMessage = "Can't update this transaction right now."
+                        showaAlert   = true
+                    }
+                  
+//                    transactions.append(trans action)
                 }
                 
                 dismiss()
