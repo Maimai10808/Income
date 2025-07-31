@@ -28,17 +28,17 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @State private var transactions: [Transaction] = [
-        
-        Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date()),
-        Transaction(title: "Apple", type: .expense, amount: 5.00, date: Date()),
-        Transaction(title: "Apple", type: .income, amount: 5.00, date: Date())
-        
-    ]
+    @State private var transactions: [Transaction] = [ ]
+    @State private var transactionToEdit: Transaction?
     
-    @AppStorage("orderDescending") var orderDescending = false
-    @AppStorage("currency") var currency: Currency = .usd
-    @AppStorage("filterMinimum") var filterMinimum = 0.0
+    @FetchRequest(sortDescriptors: []) var transactionsCoreData: FetchedResults<TransactionItem>
+    
+    @AppStorage("orderDescending") var orderDescending    = false
+    @AppStorage("currency")        var currency: Currency = .usd
+    @AppStorage("filterMinimum")   var filterMinimum      = 0.0
+    
+    @State private var showAddTransactionView = false
+    @State private var showSettings           = false
     
     private var displayTransactions: [Transaction] {
         let sortedTransactions = orderDescending ?
@@ -48,13 +48,6 @@ struct HomeView: View {
         return sortedTransactions
     }
     
-   
-    
-    @State private var showAddTransactionView = false
-    
-    @State private var transactionToEdit: Transaction?
-    
-    @State private var showSettings = false
     
     private var expenses: String {
         let sumExpesnses = transactions

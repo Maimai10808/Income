@@ -14,14 +14,14 @@ struct AddTransactionView: View {
     @State private var transactionTitle = ""
     @State private var selectedTransactionType: TransactionType = .expense
     
-    @State private var alertTitle   = ""
-    @State private var alertMessage = ""
-    @State private var showaAlert   = false
+    @Binding var transactions: [Transaction]
+    var transactionToEdit: Transaction?
     
     @AppStorage("currency") var currency: Currency = .usd
     
-    @Binding var transactions: [Transaction]
-    var transactionToEdit: Transaction?
+    @State private var alertTitle   = ""
+    @State private var alertMessage = ""
+    @State private var showaAlert   = false
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) private var viewContext
