@@ -9,9 +9,11 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @State private var orderDescending = false
+    @AppStorage("orderDescending") var orderDescending = false
     @State private var currency: Currency = .usd
     @State private var filterMinimum = 0.0
+    
+    
     
     var numberFormatter: NumberFormatter {
         let numberFormatter = NumberFormatter()
@@ -24,7 +26,7 @@ struct SettingsView: View {
             List {
                 HStack {
                     Toggle(isOn: $orderDescending, label: {
-                        Text("Order \(orderDescending ? "(Earliest)" : "(Earliest)")")
+                        Text("Order \(orderDescending ? "(Earliest)" : "(Latest)")")
                     })
                 }
                 
